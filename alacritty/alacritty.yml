@@ -10,6 +10,18 @@ env:
 
 # Font configuration
 font:
+  family: Inconsolata LGC Nerd Font Propo
+
+  # The `style` can be specified to pick a specific face.
+  style: Regular
+
+  # Point size
+  size: 14.0
+
+  offset:
+    x: 2
+    y: 1
+
   # Normal (roman) font face
   normal:
     # Font family
@@ -22,15 +34,13 @@ font:
     family: Inconsolata LGC Nerd Font Propo
 
     # The `style` can be specified to pick a specific face.
-    #style: Regular
-
-  # Point size
-  size: 14.0
+    # style: Regular
+    style: Regular
+    # weight: 200
 
 key_bindings:
-  # - { key: .,              mods: LAlt,            chars: "\x1B[1;3."       }
-  - { key: Return,              mods: Command,            action: ToggleFullscreen      }
-  - { key: Period,              mods: Alt,            chars: "\e."      }
+  - { key: Return, mods: Command, action: ToggleFullscreen }
+  - { key: Period, mods: Alt, chars: "\e." }
 
 debug:
   # Display the time it takes to redraw each frame.
@@ -66,4 +76,8 @@ debug:
 draw_bold_text_with_bright_colors: true
 
 import:
-  - ~/.config/alacritty/themes/themes/konsole_linux.yaml
+  # - ~/.config/alacritty/themes/themes/xterm.yaml
+  - ~/.config/alacritty/themes/themes/terminal_app.yaml
+  # - ~/.config/alacritty/themes/themes/iterm.yaml
+  # - ~/.config/alacritty/themes/themes/solarized_light.yaml
+  # - ~/.config/alacritty/themes/themes/snazzy.yaml
