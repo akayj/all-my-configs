@@ -12,12 +12,6 @@ TERM = "xterm-256color"
 
 [window]
 dimensions = { columns = 140, lines = 38 }
-dynamic_padding = true
-# Background opacity
-#
-# Window opacity as a floating point number from `0.0` to `1.0`.
-# The value `0.0` is completely transparent and `1.0` is opaque.
-# background_opacity: 1.0
 opacity = 0.95
 decorations = "full"
 option_as_alt = "OnlyLeft"
@@ -27,19 +21,14 @@ history = 3000
 
 # Font configuration
 [font]
-# Normal (roman) font face
 normal = { family = "Inconsolata LGC Nerd Font Propo" }
-# Point size
 size = 14.0
 
 # Colors (Tomorrow Night Bright)
 [colors]
-# If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors = true
 
 [cursor]
-# If this is `true`, the cursor will be rendered as a hollow box when the
-# window is not focused.
 unfocused_hollow = true
 
 [mouse]
