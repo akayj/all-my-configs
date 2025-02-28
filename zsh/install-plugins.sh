@@ -4,7 +4,6 @@ set -eu
 
 declare -A plugins
 plugins=(
-  [zsh-autocomplete]=marlonrichert/zsh-autocomplete
   [you-should-use]=MichaelAquilina/zsh-you-should-use
   [F-Sy-H]=z-shell/F-Sy-H
   [zsh-autosuggestions]=zsh-users/zsh-autosuggestions
