@@ -146,8 +146,3 @@ batdiff() {
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-alias etcd-login="docker exec -it local-etcd bash"
-source ~/.ssh-profile
-
-export PATH="$HOME/.bin:$PATH"
