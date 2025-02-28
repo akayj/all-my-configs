@@ -88,7 +88,6 @@ plugins=(
 
   zsh-autosuggestions
   zsh-syntax-highlighting
-  zsh-autocomplete
   F-Sy-H
   you-should-use
 )
