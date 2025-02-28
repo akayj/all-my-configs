@@ -20,16 +20,17 @@ plugins = [
 
 # 设置自定义ZSH路径
 ZSH_CUSTOM = os.getenv('ZSH_CUSTOM', os.path.expanduser('~/.oh-my-zsh/custom'))
+ZSH_CUSTOM_PLUGIN_BASE = os.path.join(ZSH_CUSTOM, 'plugins')
 
 # 确保插件目录存在
-os.makedirs(os.path.join(ZSH_CUSTOM, 'plugins'), exist_ok=True)
+os.makedirs(ZSH_CUSTOM_PLUGIN_BASE, exist_ok=True)
 
 # 遍历插件列表
 for plugin in plugins:
     name = plugin.name
     repo = plugin.repo
 
-    plugin_dir = os.path.join(ZSH_CUSTOM, 'plugins', name)
+    plugin_dir = os.path.join(ZSH_CUSTOM_PLUGIN_BASE, name)
 
     # 检查插件是否已安装
     if not os.path.isdir(plugin_dir):
