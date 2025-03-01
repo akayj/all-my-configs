@@ -89,7 +89,7 @@ plugins=(
   zsh-autosuggestions
   zsh-syntax-highlighting
   F-Sy-H
-  you-should-use
+  zsh-you-should-use
 )
 
 source $ZSH/oh-my-zsh.sh
