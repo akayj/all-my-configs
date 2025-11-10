@@ -1,3 +1,17 @@
+# Nushell 配置入口文件
+# 
+# 配置文件结构说明：
+# - config.nu: 主配置入口，只包含基础配置和模块导入
+# - modules/env.nu: 环境变量配置
+# - modules/prompt.nu: 提示符配置
+# - modules/aliases.nu: 命令别名和快捷方式
+# - modules/wd.nu: 工作目录快捷跳转
+# - modules/git.nu: Git 相关功能
+# - env.nu.example: 本地环境变量模板（不提交到版本控制）
+
+# ============================================
+# 基础配置
+# ============================================
 $env.config = {
     show_banner: false
     completions: {
@@ -7,40 +21,17 @@ $env.config = {
     error_style: "fancy"
 }
 
-# 环境变量
-# $env.GITHUB_TOKEN = ""  # 请在本地环境中设置
-$env.NVM_DIR = $"($env.HOME)/.nvm"
-$env.BUN_INSTALL = $"($env.HOME)/.bun"
-$env.TERM = "xterm-256color"
-
-$env.PATH = ($env.PATH | prepend [
-    $"($env.HOME)/.opencode/bin"
-    $"($env.HOME)/.bun/bin"
-    $"($env.HOME)/.moon/bin"
-])
-
-def "go-version" [] {
-    go version | split row " " | get 2
-}
-
-def create_prompt [] {
-    let dir = (pwd | path basename)
-
-    let git_info = (do {
-        git rev-parse --abbrev-ref HEAD
-    } | complete)
-
-    if $git_info.exit_code == 0 {
-        let git_branch = ($git_info.stdout | str trim)
-        $"($dir) \(($git_branch)) > "
-    } else {
-        $"($dir) > "
-    }
-}
-
-$env.PROMPT_COMMAND = { create_prompt }
-
-
+# ============================================
 # 导入模块
-use modules/wd.nu *
-use modules/git.nu *
+# ============================================
+use modules/env.nu *      # 环境变量配置
+use modules/prompt.nu *   # 提示符配置
+use modules/aliases.nu *  # 命令别名
+use modules/wd.nu *       # 工作目录管理
+use modules/git.nu *      # Git 功能
+
+# ============================================
+# 本地环境变量
+# ============================================
+# 注意：敏感信息（如 GITHUB_TOKEN）应该放在 ~/.config/nushell/env.nu 中
+# 该文件不会被版本控制，请参考 env.nu.example

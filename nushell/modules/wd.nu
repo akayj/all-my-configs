@@ -3,7 +3,8 @@
 
 # 获取书签文件路径
 def wd-file [] {
-  $"($env.HOME)/.config/nushell/wd_bookmarks.json"
+  let config_dir = ($env | get -o XDG_CONFIG_HOME | default $"($env.HOME)/.config")
+  $"($config_dir)/nushell/wd_bookmarks.json"
 }
 
 # 补全函数：获取所有书签名称

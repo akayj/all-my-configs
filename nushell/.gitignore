@@ -1,0 +1,4 @@
+# 忽略用户特定文件
+wd_bookmarks.json
+# 忽略根目录的 env.nu（用户本地敏感信息）
+/env.nu
