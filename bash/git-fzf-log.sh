@@ -49,9 +49,10 @@ git_fzf_log() {
 
     # 主界面：列出最近 500 条日志
     #    传入的 $1 作为初始查询词
-    commit=$(git log --color=always --date="$_date_format" --pretty="tformat:$_log_format" -500 --date-order |
+    #    注意：git log 默认倒序（最新在上），fzf 用 --layout=reverse 只改界面布局不改行顺序
+    commit=$(git log --color=always --date="$_date_format" --pretty="tformat:$_log_format" -500 |
         fzf --ansi \
-            --reverse --height=100% \
+            --layout=reverse --height=100% \
             --header "↑↓ 选择 / Ctrl-S diff-stat / Ctrl-Y show / Ctrl-O checkout" \
             --bind "ctrl-s:execute-silent(git show --color=always --stat {1})+abort" \
             --bind "ctrl-y:execute(git show --color=always {1})" \
