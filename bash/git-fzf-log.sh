@@ -38,10 +38,10 @@ git_fzf_log() {
         echo "错误：当前目录不是 Git 仓库"
         return 1
     fi
-    
+
     # 确保 fzf 已安装
     _ensure_fzf
-    
+
     # 颜色变量
     _diff_preview_window="right:60%:wrap"
     _log_format="%C(yellow)%h %C(cyan)%ad %C(blue)%an%C(reset): %s"

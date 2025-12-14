@@ -28,7 +28,7 @@ parse_mirror() {
 setup_git_repos() {
     local base_url="$1"
     local repos=("brew" "homebrew/core" "homebrew/cask")
-    
+
     if [[ "$base_url" == "https://github.com" ]]; then
         git -C "$(brew --repo)" remote set-url origin "$base_url/Homebrew/brew.git"
         git -C "$(brew --repo homebrew/core)" remote set-url origin "$base_url/Homebrew/homebrew-core.git"
@@ -45,10 +45,10 @@ setup_bottle() {
     local bottle_url="$1"
     local rc_file="${ZDOTDIR:-$HOME}/.zshrc"
     [[ -n "$BASH_VERSION" ]] && rc_file="$HOME/.bash_profile"
-    
+
     # 清理旧配置
     [[ -f "$rc_file" ]] && sed -i.bak '/HOMEBREW_BOTTLE_DOMAIN/d' "$rc_file"
-    
+
     # 设置新配置
     if [[ -n "$bottle_url" ]]; then
         echo "export HOMEBREW_BOTTLE_DOMAIN=$bottle_url" >> "$rc_file"
@@ -60,17 +60,20 @@ setup_bottle() {
 apply_mirror() {
     local name="$1"
     local git_url bottle_url
-    
-    git_url=$(parse_mirror "$name" 2) || { echo "错误: 未知镜像 '$name'"; return 1; }
+
+    git_url=$(parse_mirror "$name" 2) || {
+        echo "错误: 未知镜像 '$name'"
+        return 1
+    }
     bottle_url=$(parse_mirror "$name" 3)
-    
+
     echo "==> 配置镜像: $name"
     setup_git_repos "$git_url"
     setup_bottle "$bottle_url"
-    
+
     echo "==> 更新 Homebrew"
     brew update
-    
+
     echo "==> 完成"
     git -C "$(brew --repo)" remote get-url origin
 }
@@ -81,8 +84,8 @@ select_mirror() {
     for item in "${MIRRORS[@]}"; do
         names+=("${item%%|*}")
     done
-    
-    if command -v fzf >/dev/null 2>&1; then
+
+    if command -v fzf > /dev/null 2>&1; then
         choice=$(printf '%s\n' "${names[@]}" |
             fzf --prompt='镜像源> ' \
                 --height=40% --layout=reverse --border \
@@ -93,7 +96,7 @@ select_mirror() {
             [[ -n "$choice" ]] && break
         done
     fi
-    
+
     # 显示选中镜像的详细信息
     if [[ -n "$choice" ]]; then
         echo ""
@@ -108,14 +111,17 @@ select_mirror() {
         done
         echo ""
     fi
-    
+
     echo "$choice"
 }
 
 # 主函数
 cn_brew() {
-    command -v brew >/dev/null 2>&1 || { echo "错误: 未安装 Homebrew"; return 1; }
-    
+    command -v brew > /dev/null 2>&1 || {
+        echo "错误: 未安装 Homebrew"
+        return 1
+    }
+
     local mirror="${1:-$(select_mirror)}"
     [[ -n "$mirror" ]] && apply_mirror "$mirror"
 }
