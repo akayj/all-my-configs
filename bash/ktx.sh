@@ -24,6 +24,7 @@ ktx() {
                 fzf --prompt='context> ' \
                     --height=40% --reverse --border \
                     --preview "$preview_cmd" \
+                    --bind "alt-r:toggle-raw" \
                     --bind 'ctrl-/:toggle-preview')
         else
             select cur in $ctx_list; do break; done
@@ -49,6 +50,7 @@ kns() {
                 fzf --prompt='namespace> ' \
                     --height=40% --reverse --border \
                     --preview 'kubectl get pods -n {} --no-headers | head -10' \
+                    --bind "alt-r:toggle-raw" \
                     --bind 'ctrl-/:toggle-preview')
         else
             select cur in $ns_list; do break; done
