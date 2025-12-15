@@ -102,8 +102,3 @@ git_fzf_log() {
 
 # 创建别名，方便调用
 alias glf='git_fzf_log'
-
-# 如果直接执行脚本（而不是 source），则调用函数
-if [ "${BASH_SOURCE:-$0}" = "$0" ]; then
-    git_fzf_log "$@"
-fi
