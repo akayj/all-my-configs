@@ -96,7 +96,7 @@ select_mirror() {
 
     if command -v fzf > /dev/null 2>&1; then
         choice=$(printf '%s\n' "${names[@]}" \
-                                             | fzf --prompt='镜像源> ' \
+                | fzf --prompt='镜像源> ' \
                 --height=40% --layout=reverse --border \
                 --header='使用 ↑↓ 选择，Enter 确认')
     else
