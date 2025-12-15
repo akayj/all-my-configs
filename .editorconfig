@@ -18,7 +18,7 @@ indent_size = 4
 
 # --language-dialect
 shell_variant      = bash
-simplify           = true
+simplify           = false
 binary_next_line   = true
 # --case-indent
 switch_case_indent = true
@@ -32,7 +32,7 @@ keep_padding       = true
 indent_style = space
 indent_size = 4
 shell_variant      = bash
-simplify           = true
+simplify           = false
 binary_next_line   = true
 switch_case_indent = true
 space_redirects    = true

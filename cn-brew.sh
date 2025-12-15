@@ -6,11 +6,11 @@ set -e
 
 # 镜像源配置 (名称|Git镜像|Bottle镜像)
 readonly MIRRORS=(
-    "清华|https://mirrors.tuna.tsinghua.edu.cn|https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+    "清华|https://mirrors.tuna.tsinghua.edu.cn/git/homebrew|https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
     "中科大|https://mirrors.ustc.edu.cn|https://mirrors.ustc.edu.cn/homebrew-bottles"
-    "阿里云|https://mirrors.aliyun.com|https://mirrors.aliyun.com/homebrew/homebrew-bottles"
-    "腾讯云|https://mirrors.cloud.tencent.com|https://mirrors.cloud.tencent.com/homebrew-bottles"
-    "官方|https://github.com|"
+    "阿里云|https://mirrors.aliyun.com/homebrew|https://mirrors.aliyun.com/homebrew/homebrew-bottles"
+    "腾讯云|https://mirrors.cloud.tencent.com/homebrew|https://mirrors.cloud.tencent.com/homebrew-bottles"
+    "官方|https://github.com/Homebrew|"
 )
 
 # 解析镜像配置
@@ -27,16 +27,21 @@ parse_mirror() {
 # 配置 Git 仓库镜像
 setup_git_repos() {
     local base_url="$1"
-    local repos=("brew" "homebrew/core" "homebrew/cask")
+    local repo_path
 
-    if [[ "$base_url" == "https://github.com" ]]; then
-        git -C "$(brew --repo)" remote set-url origin "$base_url/Homebrew/brew.git"
-        git -C "$(brew --repo homebrew/core)" remote set-url origin "$base_url/Homebrew/homebrew-core.git"
-        git -C "$(brew --repo homebrew/cask)" remote set-url origin "$base_url/Homebrew/homebrew-cask.git"
-    else
-        for repo in "${repos[@]}"; do
-            git -C "$(brew --repo ${repo#homebrew/})" remote set-url origin "$base_url/git/homebrew/${repo#homebrew/}.git"
-        done
+    # 配置主仓库
+    git -C "$(brew --repo)" remote set-url origin "$base_url/brew.git"
+
+    # 配置 homebrew-core（如果存在）
+    repo_path="$(brew --repo homebrew/core 2> /dev/null)" || true
+    if [[ -d "$repo_path" ]]; then
+        git -C "$repo_path" remote set-url origin "$base_url/homebrew-core.git"
+    fi
+
+    # 配置 homebrew-cask（如果存在）
+    repo_path="$(brew --repo homebrew/cask 2> /dev/null)" || true
+    if [[ -d "$repo_path" ]]; then
+        git -C "$repo_path" remote set-url origin "$base_url/homebrew-cask.git"
     fi
 }
 
@@ -71,11 +76,16 @@ apply_mirror() {
     setup_git_repos "$git_url"
     setup_bottle "$bottle_url"
 
-    echo "==> 更新 Homebrew"
-    brew update
+    printf "==> Updating Homebrew..."
+    if brew update > /dev/null 2>&1; then
+        printf "\r\033[32m==> Updated Homebrew \033[0m\n"
+    else
+        printf "\r\033[31m错误: Homebrew 更新失败\033[0m\n"
+        return 1
+    fi
 
-    echo "==> 完成"
-    git -C "$(brew --repo)" remote get-url origin
+    local current_git_repo=$(git -C "$(brew --repo)" remote get-url origin)
+    printf "==> 当前 Git 仓库地址: %s\n" "$current_git_repo"
 }
 
 # 交互式选择
@@ -86,8 +96,8 @@ select_mirror() {
     done
 
     if command -v fzf > /dev/null 2>&1; then
-        choice=$(printf '%s\n' "${names[@]}" |
-            fzf --prompt='镜像源> ' \
+        choice=$(printf '%s\n' "${names[@]}" \
+                                             | fzf --prompt='镜像源> ' \
                 --height=40% --layout=reverse --border \
                 --header='使用 ↑↓ 选择，Enter 确认')
     else
@@ -99,17 +109,17 @@ select_mirror() {
 
     # 显示选中镜像的详细信息
     if [[ -n "$choice" ]]; then
-        echo ""
-        echo "已选择: $choice"
+        echo "" >&2
+        echo "已选择: $choice" >&2
         for m in "${MIRRORS[@]}"; do
             if [[ "${m%%|*}" == "$choice" ]]; then
-                echo "Git:    $(echo "$m" | cut -d'|' -f2)"
+                echo "Git:    $(echo "$m" | cut -d'|' -f2)" >&2
                 b=$(echo "$m" | cut -d'|' -f3)
-                [[ -n "$b" ]] && echo "Bottle: $b" || echo "Bottle: (官方源)"
+                [[ -n "$b" ]] && echo "Bottle: $b" >&2 || echo "Bottle: (官方源)" >&2
                 break
             fi
         done
-        echo ""
+        echo "" >&2
     fi
 
     echo "$choice"
