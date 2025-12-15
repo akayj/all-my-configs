@@ -26,8 +26,8 @@ _ensure_fzf() {
         # 通过 GitHub API 直接获取对应平台的下载链接
         echo "Fetching latest fzf release for ${FZF_OS}_${FZF_ARCH}..."
         FZF_URL=$(curl -fsSL https://api.github.com/repos/junegunn/fzf/releases/latest \
-                                                                                       | grep "browser_download_url.*fzf-.*-${FZF_OS}_${FZF_ARCH}.tar.gz" \
-                                                                             | sed -E 's/.*"browser_download_url": *"([^"]+)".*/\1/')
+            | grep "browser_download_url.*fzf-.*-${FZF_OS}_${FZF_ARCH}.tar.gz" \
+            | sed -E 's/.*"browser_download_url": *"([^"]+)".*/\1/')
 
         if [ -z "$FZF_URL" ]; then
             echo "Failed to fetch download URL from GitHub API"
