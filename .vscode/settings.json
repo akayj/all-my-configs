@@ -1,0 +1,14 @@
+{
+  "[shellscript]": {
+    "editor.defaultFormatter": "mkhl.shfmt",
+    "editor.formatOnSave": true
+  },
+  "files.associations": {
+    "*.sh": "shellscript",
+    "*.bash": "shellscript",
+    "*.zsh": "shellscript"
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true
+}

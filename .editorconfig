@@ -1,0 +1,77 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# Shell scripts
+[*.sh]
+# like -i=4
+indent_style = space
+indent_size = 4
+
+# --language-dialect
+shell_variant      = bash
+simplify           = true
+binary_next_line   = true
+# --case-indent
+switch_case_indent = true
+space_redirects    = true
+keep_padding       = true
+# --func-next-line
+# function_next_line = true
+# minify             = true
+
+[*.{bash,zsh}]
+indent_style = space
+indent_size = 4
+shell_variant      = bash
+simplify           = true
+binary_next_line   = true
+switch_case_indent = true
+space_redirects    = true
+keep_padding       = true
+# function_next_line = true
+
+# Nushell scripts
+[*.nu]
+indent_style = space
+indent_size = 2
+
+# YAML files
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# TOML files
+[*.toml]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+# Python files
+[*.py]
+indent_style = space
+indent_size = 4
+
+# Makefile
+[Makefile]
+indent_style = tab
+
+# Ignore the entire "third_party" directory when calling shfmt on directories,
+# such as "shfmt -l -w .". When formatting files directly,
+# like "shfmt -w third_party/foo.sh" or "shfmt --filename=third_party/foo.sh",
+# the ignore logic is applied only when the --apply-ignore flag is given.
+[third_party/**]
+ignore = true
