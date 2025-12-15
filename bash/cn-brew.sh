@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Homebrew 中国镜像源配置工具
-# 兼容 Bash 3.x+
 
 set -e
 
@@ -128,7 +127,7 @@ select_mirror() {
 # 主函数
 cn_brew() {
     command -v brew > /dev/null 2>&1 || {
-        echo "错误: 未安装 Homebrew"
+        printf "\033[31m错误: 未安装 Homebrew\033[0m\n"
         return 1
     }
 
