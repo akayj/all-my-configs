@@ -8,7 +8,6 @@ readonly MIRRORS=(
     "清华|https://mirrors.tuna.tsinghua.edu.cn/git/homebrew|https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
     "中科大|https://mirrors.ustc.edu.cn|https://mirrors.ustc.edu.cn/homebrew-bottles"
     "阿里云|https://mirrors.aliyun.com/homebrew|https://mirrors.aliyun.com/homebrew/homebrew-bottles"
-    "腾讯云|https://mirrors.cloud.tencent.com/homebrew|https://mirrors.cloud.tencent.com/homebrew-bottles"
     "官方|https://github.com/Homebrew|"
 )
 
