@@ -11,6 +11,57 @@ readonly MIRRORS=(
     "官方|https://github.com/Homebrew|"
 )
 
+_ensure_fzf() {
+    FZF_LOCAL="$HOME/.local/bin/fzf"
+    if ! command -v fzf &> /dev/null && [ ! -x "$FZF_LOCAL" ]; then
+        echo "fzf not found, downloading latest release ..."
+        mkdir -p "$HOME/.local/bin"
+
+        # 自动检测 OS / arch
+        case "$(uname -s)" in
+            Linux*) FZF_OS="linux" ;;
+            Darwin*) FZF_OS="darwin" ;;
+            *)
+                echo "Unsupported OS"
+                return 1
+                ;;
+        esac
+        case "$(uname -m)" in
+            x86_64) FZF_ARCH="amd64" ;;
+            aarch64 | arm64) FZF_ARCH="arm64" ;;
+            *)
+                echo "Unsupported arch"
+                return 1
+                ;;
+        esac
+
+        # 通过 GitHub API 直接获取对应平台的下载链接
+        echo "Fetching latest fzf release for ${FZF_OS}_${FZF_ARCH}..."
+        FZF_URL=$(curl -fsSL https://api.github.com/repos/junegunn/fzf/releases/latest |
+            grep "browser_download_url.*fzf-.*-${FZF_OS}_${FZF_ARCH}.tar.gz" |
+            sed -E 's/.*"browser_download_url": *"([^"]+)".*/\1/')
+
+        if [ -z "$FZF_URL" ]; then
+            echo "Failed to fetch download URL from GitHub API"
+            return 1
+        fi
+
+        printf "Downloading %s ...\n" "$FZF_URL"
+        if curl -fL "$FZF_URL" -o /tmp/fzf.tgz; then
+            tar -xf /tmp/fzf.tgz -C "$HOME/.local/bin" fzf
+            chmod +x "$HOME/.local/bin/fzf"
+            rm /tmp/fzf.tgz
+            printf "fzf %s installed successfully to %s\n" "$($FZF_LOCAL --version)" "$FZF_LOCAL"
+        else
+            echo "Failed to download fzf"
+            rm -f /tmp/fzf.tgz
+            return 1
+        fi
+    fi
+    # 确保在 PATH
+    export PATH="$HOME/.local/bin:$PATH"
+}
+
 # 解析镜像配置
 parse_mirror() {
     local name="$1" field="$2"
@@ -94,8 +145,8 @@ select_mirror() {
     done
 
     if command -v fzf > /dev/null 2>&1; then
-        choice=$(printf '%s\n' "${names[@]}" \
-                | fzf --prompt='镜像源> ' \
+        choice=$(printf '%s\n' "${names[@]}" |
+            fzf --prompt='镜像源> ' \
                 --height=40% --layout=reverse --border \
                 --header='使用 ↑↓ 选择，Enter 确认')
     else
@@ -125,6 +176,7 @@ select_mirror() {
 
 # 主函数
 cn_brew() {
+    _ensure_fzf
     command -v brew > /dev/null 2>&1 || {
         printf "\033[31m错误: 未安装 Homebrew\033[0m\n"
         return 1
