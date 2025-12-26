@@ -49,7 +49,11 @@ kns() {
             cur=$(echo "$ns_list" |
                 fzf --prompt='namespace> ' \
                     --height=40% --reverse --border \
-                    --preview 'kubectl get pods -n {} --no-headers | head -10' \
+                    --header='↑↓: 切换namespace | ctrl-r: 刷新pod列表 | ctrl-/: 切换预览' \
+                    --preview 'kubectl get pods -n {} --no-headers 2>/dev/null | head -20' \
+                    --preview-window 'right:50%:wrap' \
+                    --bind 'ctrl-r:refresh-preview' \
+                    --bind 'focus:refresh-preview' \
                     --bind "alt-r:toggle-raw" \
                     --bind 'ctrl-/:toggle-preview')
         else
